@@ -16,4 +16,4 @@
 ###< symfony/phpunit-bridge ###
 
 ###custom
-.idea/*
+.idea/
