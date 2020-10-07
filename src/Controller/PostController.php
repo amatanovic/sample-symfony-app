@@ -19,7 +19,7 @@ class PostController extends AbstractController
      */
     public function list()
     {
-        return new Response('yeaa');
+        return $this->render('post/list.html.twig');
     }
 
 }
