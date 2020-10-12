@@ -2,5 +2,14 @@
 
 
 {% block body %}
-
+    {% if app.user %}
+        <div class="row justify-content-center">
+            <div class="col-6">
+                {{ form_start(postForm) }}
+                {{ form_row(postForm.content) }}
+                {{ form_rest(postForm) }}
+                <button type="submit" class="btn btn-block btn-primary">Post</button>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

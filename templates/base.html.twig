@@ -35,7 +35,14 @@
     </div>
 </nav>
 <div class="container">
-
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
     {% block body %}{% endblock %}
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
