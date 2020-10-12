@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if app.user %}
+        <div class="row mt-4 justify-content-center">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.user.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ post.createdAt|date("d.m.Y. h:i") }}</h6>
+                        <p class="card-text">{{ post.content }}</p>
+                        {% if canDelete %}
+                            <div class="text-right">
+                                <a href="{{ path('post_delete', {id: post.id}) }}"
+                                   class="btn btn-danger text-right">Delete</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
