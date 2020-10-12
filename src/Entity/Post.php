@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,6 +17,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Post
 {
+
+    /**
+     * Post constructor.
+     */
+    public function __construct()
+    {
+        $this->likes = new ArrayCollection();
+    }
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -39,6 +50,45 @@ class Post
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @var PersistentCollection
+     * @ORM\OneToMany(targetEntity="App\Entity\PostLike", mappedBy="post", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private $likes;
+
+    /**
+     * @return PersistentCollection|PostLike[]
+     */
+    public function getLikes(): PersistentCollection
+    {
+        return $this->likes;
+    }
+
+    /**
+     * @param PostLike $like
+     * @return $this
+     */
+    public function addLike(PostLike $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setPost($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @param PostLike $like
+     * @return $this
+     */
+    public function removeLike(PostLike $like): self
+    {
+        if ($this->likes->contains($like)) {
+            $this->likes->removeElement($like);
+        }
+        return $this;
+    }
 
     /**
      * @return mixed

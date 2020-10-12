@@ -1,24 +1,58 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if app.user %}
-        <div class="row mt-4 justify-content-center">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.user.name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ post.createdAt|date("d.m.Y. h:i") }}</h6>
-                        <p class="card-text">{{ post.content }}</p>
-                        {% if canDelete %}
-                            <div class="text-right">
-                                <a href="{{ path('post_delete', {id: post.id}) }}"
-                                   class="btn btn-danger text-right">Delete</a>
-                            </div>
-                        {% endif %}
-                    </div>
+    <div class="row mt-4 justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.user.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ post.createdAt|date("d.m.Y. h:i") }}</h6>
+                    <p class="card-text">{{ post.content }}</p>
+                    {% if app.user %}
+                        <div class="text-left">
+                            <a href="#" class="like-post" style="text-decoration:none;color: inherit;">
+                                    <span style="color: #c20b0b;">
+                                        <i id="likeHeart"
+                                           class="fa{% if userLikesPost %}s{% else %}r{% endif %} fa-heart"></i>
+                                    </span>
+                                <span class="likes-count">{{ post.likes|length }}</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if canDelete %}
+                        <div class="text-right">
+                            <a href="{{ path('post_delete', {id: post.id}) }}"
+                               class="btn btn-danger text-right">Delete</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    {% endif %}
+    </div>
 
+{% endblock %}
+{% block javascripts %}
+    {% if app.user %}
+        <script>
+            $(document).ready(function () {
+                $('.like-post').click(function () {
+                    $.ajax({
+                        url: '{{ url('post_like') }}',
+                        type: 'POST',
+                        data: {
+                            post: {{ post.id }}
+                        },
+                        success: function (response) {
+                            if ($("#likeHeart").hasClass('far')) {
+                                $("#likeHeart").removeClass('far').addClass('fas');
+                            } else {
+                                $("#likeHeart").removeClass('fas').addClass('far');
+                            }
+                            $(".likes-count").html(response.likes);
+                        }
+                    });
+                });
+            });
+        </script>
+    {% endif %}
 {% endblock %}
